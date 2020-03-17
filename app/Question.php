@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Question extends Model
 {
     //
- protected $fillable = ['title','body'];
- 
-    public function user(){
+    protected $fillable = ['title', 'body'];
+
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    
+
     public function setTitleAttribute($value)
     {
         $this->attributes['title'] = $value;
@@ -22,10 +23,10 @@ class Question extends Model
 
     public function getUrlAttribute()
     {
-        return route("questions.show", $this->id);
+        return route("questions.show", $this->slug);
     }
 
-    
+
     public function getCreatedDateAttribute()
     {
         return $this->created_at->diffForHumans();
@@ -43,4 +44,8 @@ class Question extends Model
     }
 
 
+    public function getBodyHtmlAttribute()
+    {
+        return \Parsedown::instance()->text($this->body);
+    }
 }
